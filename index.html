@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Upload a SQLite database to generate an SVG</title>
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/4.3.0/dropzone.css" type="text/css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.2/min/dropzone.min.js"></script>
+  <style type="text/css">
+  body {
+    background: rgb(243, 244, 245);
+    height: 100%;
+    color: #ffffff;
+    line-height: 1.4rem;
+    font-family: Roboto, "Open Sans", sans-serif;
+    font-size: 20px;
+    font-weight: 300;
+    text-rendering: optimizeLegibility;
+}
+
+h1 { text-align: center; }
+
+.dropzone {
+    background: white;
+    border-radius: 5px;
+    border: 2px dashed rgb(0, 135, 247);
+    border-image: none;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.footnote {
+  font-size: 14px;
+  text-align: center;
+}
+
+html, body {
+    height: 100%;
+}
+body {
+    margin: 0;
+}
+.flex-container {
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap:wrap;
+}
+.row {
+    width: auto;
+    flex: 0 0 100%;
+    text-align: center;
+}
+.flex-item {
+    padding: 5px;
+    margin: 10px;
+    line-height: 20px;
+    color: #000000;
+    text-align: center;
+}
+  </style>
+
+</head>
+<body>
+    <div class="flex-container" id="container">
+        <div class="row">
+            <div class="flex-item">
+                <section>
+                    <div id="dropzone">
+                        <form class="dropzone needsclick" id="demo-upload" action="/upload">
+                            <div class="dz-message needsclick">
+                                Drop a SQLite database here or click to upload one.<BR>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+                <div class="footnote"> This project uses <a href="https://github.com/inukshuk/sqleton" target="_blank">sqleton</a> and <a href="http://www.graphviz.org/" target="_blank">graphviz</a> internally. Check its source code on <a href="https://github.com/a0viedo/sls-sqleton" target="_blank">GitHub</a>!</div>
+            </div>
+        </div>
+    </div>
+  <script>
+var dropzone = new Dropzone('#demo-upload', {
+  parallelUploads: 1,
+  maxFilesize: 10,
+  filesizeBase: 1000,
+  thumbnail: function(){},
+  maxFiles: 1,
+  url: 'https://hw4w0hin3a.execute-api.us-east-1.amazonaws.com/dev/with-multipart',
+  params: (param1, param2) => {
+    console.log('params fn', param1, param2);
+    return {
+      // TODO: add custom params
+    }
+  }
+});
+
+dropzone.on('success', (param1, responseBody) => {
+   console.log('sucess', param1, responseBody);
+   const div = document.createElement('div');
+   div.innerHTML = responseBody;
+   div.className = 'row';
+   document.querySelector('#container').append(div);
+})
+
+
+</script>
+</body>
+</html>
